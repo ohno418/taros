@@ -92,4 +92,4 @@ msg:
   times 510-($-$$) db 0
   db 0x55, 0xaa
 
-; nasm -f bin -o tmp.bin taros2.asm && qemu-system-x86_64 tmp.bin
+; nasm -f bin -o tmp.bin ipl.asm && qemu-system-x86_64 tmp.bin
