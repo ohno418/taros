@@ -13,6 +13,7 @@
   mov dh, 0    ; Head
   mov cl, 2    ; Sector
 
+readloop:
   mov si, 0 ; failure counter
 
 retry:
@@ -21,7 +22,7 @@ retry:
   mov bx, 0
   mov dl, 0x00 ; Drive (1st floppy disk)
   int 0x13
-  jnc fin
+  jnc next
 
   ; If failure
   add si, 1
@@ -33,6 +34,17 @@ retry:
   mov dl, 0x00
   int 0x13
   jmp retry
+
+next:
+  ; Advance the load address by 0x200.
+  mov ax, es
+  add ax, 0x0020
+  mov es, ax
+
+  ; Advance the sector number.
+  add cl, 1
+  cmp cl, 18
+  jbe readloop
 
 fin:
   hlt
