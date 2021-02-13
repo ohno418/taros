@@ -1,3 +1,5 @@
+cyls equ 10
+
   org 0x7c00
 
   ; Initialize registers.
@@ -45,6 +47,18 @@ next:
   add cl, 1
   cmp cl, 18
   jbe readloop
+
+  ; Go to next head.
+  mov cl, 1
+  add dh, 1
+  cmp dh, 2
+  jb readloop
+
+  ; Go to next cylinder
+  mov dh, 0
+  add ch, 1
+  cmp ch, cyls
+  jb readloop
 
 fin:
   hlt
