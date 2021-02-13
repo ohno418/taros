@@ -30,7 +30,7 @@ retry:
   jae error
 
   ; Reset dist system
-  mov ah, 00
+  mov ah, 0x00
   mov dl, 0x00
   int 0x13
   jmp retry
