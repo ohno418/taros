@@ -1,6 +1,0 @@
-db 0xeb, 0x4e, 0x90
-db "HELLOIPL"
-dw 512
-db 1
-dw 1
-db 2
