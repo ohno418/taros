@@ -1,5 +1,3 @@
-# File creating ruls
-
 ipl.bin: ipl.asm
 	nasm -f bin -o ipl.bin ipl.asm
 
