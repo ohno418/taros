@@ -2,6 +2,29 @@ cyls equ 10
 
   org 0x7c00
 
+; For FAT12 formatted floppy disk.
+  jmp entry
+  db 0x90
+  db "HARIBOTE"
+  dw 512
+  db 1
+  dw 1
+  db 2
+  dw 224
+  dw 2880
+  db 0xf0
+  dw 9
+  dw 18
+  dw 2
+  dd 0
+  dd 2880
+  db 0,0,0x29
+  dd 0xffffffff
+  db "HARIBOTEOS "
+  db "FAT12   "
+  resb 18
+
+entry:
   ; Initialize registers.
   mov ax, 0
   mov ss, ax
