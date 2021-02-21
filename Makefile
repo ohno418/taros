@@ -1,5 +1,5 @@
-ipl.bin: ipl.asm
-	nasm -f bin -o ipl.bin ipl.asm
+ipl.bin: ipl10.asm
+	nasm -f bin -o ipl.bin ipl10.asm
 
 haribote.sys: haribote.asm
 	nasm -f bin -o haribote.sys haribote.asm
