@@ -83,7 +83,6 @@ next:
   cmp ch, cyls
   jb readloop
 
-  ; TODO: why 0xc200??
   ; Finally, execute haribote.sys!
   jmp 0xc200
 
