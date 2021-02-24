@@ -8,7 +8,7 @@ vram equ 0x0ff8
 
   org 0xc200
 
-  ; Video interruption
+  ; Video interrupt
   mov al, 0x13 ; Standard 256-color mode (320*200*8bit color)
   mov ah, 0x00 ; Video mode
   int 0x10
@@ -18,7 +18,7 @@ vram equ 0x0ff8
   mov word [scrny], 20
   mov dword [vram], 0x000a0000
 
-  ; Keyboard interruption
+  ; Keyboard interrupt
   mov ah, 0x02 ; Get the state of the keyboard
   int 0x16
   mov [leds], al
