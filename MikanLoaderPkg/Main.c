@@ -3,7 +3,7 @@
 
 EFI_STATUS EFIAPI UefiMain(
     EFI_HANDLE image_handle,
-    efi_system_table *system_table) {
+    EFI_SYSTEM_TABLE *system_table) {
   Print(L"Hello, Mikan World!\n");
   while (1);
   return EFI_SUCCESS;
