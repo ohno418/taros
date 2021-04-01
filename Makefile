@@ -16,4 +16,4 @@ disk.img: bootx64.efi
 
 .PHONY: clean
 clean:
-	sudo rm -rf disk.img mnt
+	sudo rm -rf disk.img bootx64.efi mnt
