@@ -15,6 +15,14 @@ disk.img: bootx64.efi
 	sudo cp $< mnt/efi/boot/$<
 	sudo umount mnt
 
+kernel.elf: main.o
+	ld.lld --entry KernelMain -z norelro --image-base 0x100000 --static \
+		-o $@ $<
+
+main.o: kernel/main.cpp
+	clang++ -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone \
+		-fno-exceptions -fno-rtti -std=c++17 -c -o $@ $<
+
 .PHONY: clean
 clean:
-	sudo rm -rf *.img *.efi *.o mnt
+	sudo rm -rf *.img *.efi *.o *.elf mnt
