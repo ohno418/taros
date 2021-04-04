@@ -1,5 +1,5 @@
 .PHONY: run
-run: disk.img
+run: disk.img kernel.elf
 	qemu-system-x86_64 \
 		-monitor stdio \
 		-drive if=pflash,file=../mikanos-build/devenv/OVMF_CODE.fd \
