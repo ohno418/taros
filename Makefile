@@ -1,5 +1,5 @@
 .PHONY: run
-run: disk.img kernel.elf
+run: disk.img kernel/kernel.elf
 	qemu-system-x86_64 \
 		-monitor stdio \
 		-drive if=pflash,file=../mikanos-build/devenv/OVMF_CODE.fd \
@@ -15,14 +15,15 @@ disk.img: bootx64.efi
 	sudo cp $< mnt/efi/boot/$<
 	sudo umount mnt
 
-kernel.elf: main.o
+kernel/kernel.elf: kernel/main.o
 	ld.lld --entry KernelMain -z norelro --image-base 0x100000 --static \
 		-o $@ $<
 
-main.o: kernel/main.cpp
+kernel/main.o: kernel/main.cpp
 	clang++ -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone \
 		-fno-exceptions -fno-rtti -std=c++17 -c -o $@ $<
 
 .PHONY: clean
 clean:
-	sudo rm -rf *.img *.efi *.o *.elf mnt
+	sudo rm -rf disk.img bootx64.efi \
+		kernel/main.o kernel/kernel.elf mnt
