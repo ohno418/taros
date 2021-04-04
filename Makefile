@@ -25,5 +25,5 @@ kernel/main.o: kernel/main.cpp
 
 .PHONY: clean
 clean:
-	sudo rm -rf disk.img bootx64.efi \
+	rm -rf disk.img bootx64.efi \
 		kernel/main.o kernel/kernel.elf mnt
