@@ -130,19 +130,18 @@ EFI_STATUS EFIAPI UefiMain(
   memmap_file->Close(memmap_file);
 
   /* Load kernel code into memory */
-  // Open a file for kernel.
+  // Open /kernel.elf file.
   EFI_FILE_PROTOCOL* kernel_file;
   root_dir->Open(
       root_dir, &kernel_file, L"\\kernel.elf",
       EFI_FILE_MODE_READ, 0);
 
-  // Detect kernel size.
+  // Detect kernel file size.
   UINTN file_info_size = sizeof(EFI_FILE_INFO) + sizeof(CHAR16) * 12;
   UINT8 file_info_buffer[file_info_size];
   kernel_file->GetInfo(
       kernel_file, &gEfiFileInfoGuid,
       &file_info_size, file_info_buffer);
-
   EFI_FILE_INFO* file_info = (EFI_FILE_INFO*)file_info_buffer;
   UINTN kernel_file_size = file_info->FileSize;
 
