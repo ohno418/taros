@@ -175,7 +175,7 @@ EFI_STATUS EFIAPI UefiMain(
   // Get GOP settings.
   EFI_GRAPHICS_OUTPUT_PROTOCOL* gop;
   OpenGOP(image_handle, &gop);
-  Print(L"Resulution: %ux%u, Pixel Format: %s, %u pixels/line\n",
+  Print(L"Resolution: %ux%u, Pixel Format: %s, %u pixels/line\n",
       gop->Mode->Info->HorizontalResolution,
       gop->Mode->Info->VerticalResolution,
       GetPixelFormatUnicode(gop->Mode->Info->PixelFormat),
@@ -236,9 +236,9 @@ EFI_STATUS EFIAPI UefiMain(
   UINT64 entry_addr = *(UINT64*)(kernel_base_addr + 24);
 
   // Call KernelMain function as a C function.
-  typedef void EntryPointType(void);
+  typedef void EntryPointType(UINT64, UINT64);
   EntryPointType* entry_point = (EntryPointType*)entry_addr;
-  entry_point();
+  entry_point(gop->Mode->FrameBufferBase, gop->Mode->FrameBufferSize);
 
   Print(L"All done\n");
 
