@@ -18,14 +18,14 @@ disk.img: bootx64.efi kernel/kernel.elf
 
 bootx64.efi: FORCE
 	rm -f $@
-	cp ../edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi ./$@
+	cp ../edk2/Build/MikanLoaderX64/DEBUG_GCC5/X64/Loader.efi ./$@
 
 kernel/kernel.elf: kernel/main.o
 	ld.lld --entry KernelMain -z norelro -z separate-code --image-base 0x100000 \
 		--static -o $@ $<
 
 kernel/main.o: kernel/main.cpp
-	clang++ -O2 --target=x86_64-elf -fno-exceptions -ffreestanding \
+	g++ -O2 -fno-exceptions -ffreestanding \
 		-c -o $@ $<
 
 FORCE:
