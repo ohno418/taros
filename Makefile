@@ -20,8 +20,6 @@ bootx64.efi: FORCE
 	rm -f $@
 	cp ../edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi ./$@
 
-FORCE: ;
-
 kernel/kernel.elf: kernel/main.o
 	ld.lld --entry KernelMain -z norelro --image-base 0x100000 --static \
 		-o $@ $<
@@ -29,6 +27,8 @@ kernel/kernel.elf: kernel/main.o
 kernel/main.o: kernel/main.cpp
 	clang++ -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone \
 		-fno-exceptions -fno-rtti -std=c++17 -c -o $@ $<
+
+FORCE:
 
 .PHONY: clean
 clean:
