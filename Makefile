@@ -20,17 +20,12 @@ bootx64.efi: FORCE
 	rm -f $@
 	cp ../edk2/Build/MikanLoaderX64/DEBUG_GCC5/X64/Loader.efi ./$@
 
-kernel/kernel.elf: kernel/main.o
-	ld.lld --entry KernelMain -z norelro -z separate-code --image-base 0x100000 \
-		--static -o $@ $<
-
-kernel/main.o: kernel/main.cpp
-	g++ -O2 -fno-exceptions -ffreestanding \
-		-c -o $@ $<
+kernel/kernel.elf:
+	$(MAKE) -C ./kernel
 
 FORCE:
 
 .PHONY: clean
 clean:
-	rm -rf disk.img bootx64.efi \
-		kernel/main.o kernel/kernel.elf mnt
+	$(MAKE) -C ./kernel clean
+	rm -rf disk.img bootx64.efi mnt
