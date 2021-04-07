@@ -8,4 +8,4 @@ main.o: main.cpp
 
 .PHONY: clean
 clean:
-	rm kernel.elf main.o
+	rm -f kernel.elf main.o
