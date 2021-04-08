@@ -3,8 +3,8 @@ kernel.elf: main.o
 		--static -o $@ $<
 
 main.o: main.cpp
-	g++ -O2 -fno-exceptions -ffreestanding \
-		-c -o $@ $<
+	g++ -O2 -Wall -g -ffreestanding -mno-red-zone -fno-exceptions \
+		-fno-rtti -std=c++17 -c -o $@ $<
 
 .PHONY: clean
 clean:
