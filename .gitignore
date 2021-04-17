@@ -2,3 +2,4 @@
 *.efi
 *.o
 *.elf
+*.bin

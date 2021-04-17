@@ -33,13 +33,24 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
     }
   }
   for (int x = 0; x < 200; ++x) {
-    for (int y = 0; y < 100; ++y) {
-      pixel_writer->Write(x, y, {0, 255, 0});
+    for (int y = 0; y < 115; ++y) {
+      pixel_writer->Write(x, y, {255, 165, 0});
     }
   }
 
-  WriteAscii(*pixel_writer, 50, 50, 'A', {0, 0, 0});
-  WriteAscii(*pixel_writer, 58, 50, 'A', {0, 0, 0});
+  WriteAscii(*pixel_writer, 50, 50,  'H', {0, 0, 0});
+  WriteAscii(*pixel_writer, 58, 50,  'e', {0, 0, 0});
+  WriteAscii(*pixel_writer, 66, 50,  'l', {0, 0, 0});
+  WriteAscii(*pixel_writer, 74, 50,  'l', {0, 0, 0});
+  WriteAscii(*pixel_writer, 82, 50,  'o', {0, 0, 0});
+  WriteAscii(*pixel_writer, 90, 50,  ',', {0, 0, 0});
+  WriteAscii(*pixel_writer, 98, 50, ' ', {0, 0, 0});
+  WriteAscii(*pixel_writer, 106, 50, 'T', {0, 0, 0});
+  WriteAscii(*pixel_writer, 114, 50, 'a', {0, 0, 0});
+  WriteAscii(*pixel_writer, 122, 50, 'r', {0, 0, 0});
+  WriteAscii(*pixel_writer, 130, 50, 'O', {0, 0, 0});
+  WriteAscii(*pixel_writer, 138, 50, 'S', {0, 0, 0});
+  WriteAscii(*pixel_writer, 146, 50, '!', {0, 0, 0});
 
   while (1) __asm__("hlt");
 }
