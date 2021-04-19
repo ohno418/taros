@@ -31,11 +31,11 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
 
   for (int x = 0; x < frame_buffer_config.horizontal_resolution; ++x) {
     for (int y = 0; y < frame_buffer_config.vertical_resolution; ++y) {
-      pixel_writer->Write(x, y, {255, 255, 255});
+      pixel_writer->Write(x, y, {0, 0, 0});
     }
   }
 
-  Console console{*pixel_writer, {0, 0, 0}, {255, 255, 255}};
+  Console console{*pixel_writer, {255, 255, 255}, {0, 0, 0}};
 
   char buf[128];
   for (int i = 0; i < 27; ++i) {
