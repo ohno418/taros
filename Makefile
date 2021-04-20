@@ -20,7 +20,7 @@ bootx64.efi: FORCE
 	rm -f $@
 	cp ../edk2/Build/MikanLoaderX64/DEBUG_GCC5/X64/Loader.efi ./$@
 
-kernel/kernel.elf: kernel/main.cpp
+kernel/kernel.elf: FORCE
 	$(MAKE) -C ./kernel
 
 FORCE:
