@@ -15,8 +15,8 @@ void* operator new(size_t size, void* buf) {
 void operator delete(void* obj, size_t size) noexcept {
 }
 
-const PixelColor kDesktopBGColor{45, 118, 237};
-const PixelColor kDesktopFGColor{255, 255, 255};
+const PixelColor kDesktopBGColor{0, 220, 100};
+const PixelColor kDesktopFGColor{0, 0, 0};
 
 const int kMouseCursorWidth = 15;
 const int kMouseCursorHeight = 24;
@@ -88,10 +88,6 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   FillRectangle(*pixel_writer,
                 {0, kFrameHeight - 50},
                 {kFrameWidth, 50},
-                {1, 8, 17});
-  FillRectangle(*pixel_writer,
-                {0, kFrameHeight - 50},
-                {kFrameWidth / 5, 50},
                 {80, 80, 80});
   DrawRectangle(*pixel_writer,
                 {10, kFrameHeight - 40},
