@@ -58,9 +58,9 @@ namespace pci {
   };
 
   /** @brief List of devices that are found by ScanAllBus(). */
-  extern std::array<Device, 32> devices;
+  inline std::array<Device, 32> devices;
   /** @brief Number of valid devices */
-  extern int num_device;
+  inline int num_device;
   /** @brief Scan all PCI devices and store them into `devices`.
    *
    * Scan PCI devices from bus 0 recursively and write them into `devices`.
