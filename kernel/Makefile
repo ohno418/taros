@@ -1,4 +1,4 @@
-OBJS = main.o graphics.o font.o hankaku.o newlib_support.o console.o pci.o asmfunc.o
+OBJS = main.o graphics.o font.o hankaku.o newlib_support.o console.o pci.o asmfunc.o logger.o
 
 CPPFLAGS = -I/usr/include -I/usr/include/c++/10.2.0 -I/usr/include/c++/10.2.0/x86_64-pc-linux-gnu \
 		   -I/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include \
