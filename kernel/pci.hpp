@@ -10,6 +10,21 @@ namespace pci {
   /** @brief IO port address of CONFIG_DATA register. */
   const uint16_t kConfigData = 0x0cfc;
 
+  /** @brief PCI device class code. */
+  struct ClassCode {
+    uint8_t base, sub, interface;
+
+    bool Match(uint8_t b) { return b == base; }
+    bool Match(uint8_t b, uint8_t s) { return Match(b) && s == sub; }
+    bool Match(uint8_t b, uint8_t s, uint8_t i) { return Match(b, s) && i == interface; }
+  };
+
+  /** @brief Store basic information for PCI devices. */
+  struct Device {
+    uint8_t bus, device, function, header_type;
+    ClassCode class_code;
+  };
+
   /** @brief Write an integer into CONFIG_ADDRESS. */
   void WriteAddress(uint32_t address);
   /** @brief Write data into CONFIG_DATA. */
@@ -32,15 +47,12 @@ namespace pci {
    *   - 0x02: Card Bus Bridge
    */
   uint8_t ReadHeaderType(uint8_t bus, uint8_t device, uint8_t function);
-  /** @brief Read from class code register.
-   *
-   * Structure of 32-bit integer:
-   *   - 31:24 : Base class
-   *   - 23:16 : Sub class
-   *   - 15:8  : Programming interface
-   *   - 7:0   : Revision ID
-   */
-  uint32_t ReadClassCode(uint8_t bus, uint8_t device, uint8_t function);
+  /** @brief Read from class code register. */
+  ClassCode ReadClassCode(uint8_t bus, uint8_t device, uint8_t function);
+
+  inline uint16_t ReadVendorId(const Device& dev) {
+    return ReadVendorId(dev.bus, dev.device, dev.function);
+  }
 
   /** @brief Read from bus number register. (For header type 0x01.)
    *
@@ -52,10 +64,6 @@ namespace pci {
 
   /** @brief Return true if single function. */
   bool IsSingleFunctionDevice(uint8_t header_type);
-
-  struct Device {
-    uint8_t bus, device, function, header_type;
-  };
 
   /** @brief List of devices that are found by ScanAllBus(). */
   inline std::array<Device, 32> devices;

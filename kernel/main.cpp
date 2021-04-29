@@ -125,5 +125,23 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
         vendor_id, class_code, dev.header_type);
   }
 
+  // Find xHC.
+  pci::Device* xhc_dev = nullptr;
+  for (int i = 0; i < pci::num_device; ++i) {
+    if (pci::devices[i].class_code.Match(0x0cu, 0x03u, 0x30u)) {
+      xhc_dev = &pci::devices[i];
+
+      // For Intel xHC device.
+      if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
+        break;
+      }
+    }
+  }
+
+  if (xhc_dev) {
+    Log(kInfo, "xHC has been found: %d.%d.%d\n",
+        xhc_dev->bus, xhc_dev->device, xhc_dev->function);
+  }
+
   while (1) __asm__("hlt");
 }
