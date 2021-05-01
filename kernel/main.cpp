@@ -69,6 +69,7 @@ int printk(const char* format, ...) {
 }
 
 extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
+  // Initialize pixel_writer.
   switch (frame_buffer_config.pixel_format) {
     case kPixelRGBResv8BitPerColor:
       pixel_writer = new(pixel_writer_buf)
@@ -80,6 +81,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
       break;
   }
 
+  // Draw desktop.
   const int kFrameWidth = frame_buffer_config.horizontal_resolution;
   const int kFrameHeight = frame_buffer_config.vertical_resolution;
 
@@ -102,6 +104,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   printk("Welcome to TarOS!\n");
   SetLogLevel(kWarn);
 
+  // Write a cursor (but do nothing for now).
   for (int dy = 0; dy < kMouseCursorHeight; ++dy) {
     for (int dx = 0; dx < kMouseCursorWidth; ++dx) {
       if (mouse_cursor_shape[dy][dx] == '@') {
@@ -113,6 +116,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   }
 
 
+  // Scan devices from all buses and log them.
   auto err = pci::ScanAllBus();
   Log(kDebug, "ScanAllBus: %s\n", err.Name());
 
@@ -137,7 +141,6 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
       }
     }
   }
-
   if (xhc_dev) {
     Log(kInfo, "xHC has been found: %d.%d.%d\n",
         xhc_dev->bus, xhc_dev->device, xhc_dev->function);
