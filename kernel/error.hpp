@@ -8,7 +8,8 @@ class Error {
     kSuccess,
     kFull,
     kEmpty,
-    kLastOfCode,
+    kIndexOutOfRange,
+    kLastOfCode, // Put this last.
   };
 
   Error(Code code) : code_{code} {}
@@ -22,11 +23,18 @@ class Error {
   }
 
  private:
-  static constexpr std::array<const char*, 3> code_name_ = {
+  static constexpr std::array<const char*, 4> code_name_ = {
     "kSuccess",
     "kFull",
     "kEmpty",
+    "kIndexOutOfRange",
   };
 
   Code code_;
+};
+
+template <class T>
+struct WithError {
+  T value;
+  Error error;
 };

@@ -14,7 +14,8 @@ namespace {
         | shl(bus, 16)
         | shl(device, 11)
         | shl(function, 8)
-        | (reg_addr & 0xfcu); // Mask lower 2 bits with 0.
+        | (reg_addr & 0xfcu);
+          // bits 1:0 are always 0b00.
   }
 
   /** @brief Add the device to `devices[num_device]` and increment `num_device`. */
@@ -158,5 +159,41 @@ namespace pci {
       }
     }
     return Error::kSuccess;
+  }
+
+  uint32_t ReadConfReg(const Device& dev, uint8_t reg_addr) {
+    WriteAddress(MakeAddress(dev.bus, dev.device, dev.function, reg_addr));
+    return ReadData();
+  }
+
+  void WriteConfReg(const Device& dev, uint8_t reg_addr, uint32_t value) {
+    WriteAddress(MakeAddress(dev.bus, dev.device, dev.function, reg_addr));
+    WriteData(value);
+  }
+
+  WithError<uint64_t> ReadBar(Device& device, unsigned int bar_index) {
+    if (bar_index >= 6) {
+      return {0, Error::kIndexOutOfRange};
+    }
+
+    const auto addr = CalcBarAddress(bar_index);
+    const auto bar = ReadConfReg(device, addr);
+
+    // 32 bit address
+    // TODO: Why &04u?
+    if ((bar & 4u) == 0) {
+      return {bar, Error::kSuccess};
+    }
+
+    // 64 bit address
+    if (bar_index >= 5) {
+      return {0, Error::kIndexOutOfRange};
+    }
+
+    const auto bar_upper = ReadConfReg(device, addr + 4);
+    return {
+      bar | (static_cast<uint64_t>(bar_upper) << 32),
+      Error::kSuccess,
+    };
   }
 }

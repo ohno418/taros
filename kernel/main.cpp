@@ -9,6 +9,7 @@
 #include "graphics.hpp"
 #include "logger.hpp"
 #include "pci.hpp"
+#include "usb/xhci/xhci.hpp"
 
 void* operator new(size_t size, void* buf) {
   return buf;
@@ -66,6 +67,27 @@ int printk(const char* format, ...) {
 
   console->PutString(s);
   return result;
+}
+
+void SwitchEhci2Xhci(const pci::Device& xhc_dev) {
+  bool intel_ehc_exist = false;
+  for (int i = 0; i < pci::num_device; ++i) {
+    if (pci::devices[i].class_code.Match(0x0cu, 0x03u, 0x02u) /* EHCI */ &&
+        0x8086 == pci::ReadVendorId(pci::devices[i])) {
+      intel_ehc_exist = true;
+      break;
+    }
+  }
+  if (!intel_ehc_exist) {
+    return;
+  }
+
+  uint32_t superspeed_ports = pci::ReadConfReg(xhc_dev, 0xdc);
+  pci::WriteConfReg(xhc_dev, 0xd8, superspeed_ports);
+  uint32_t ehci2xhci_ports = pci::ReadConfReg(xhc_dev, 0xd4);
+  pci::WriteConfReg(xhc_dev, 0xd0, ehci2xhci_ports);
+  Log(kDebug, "SwitchEhci2Xhci: SS = %02, xHCI = %02x\n",
+      superspeed_ports, ehci2xhci_ports);
 }
 
 extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
@@ -144,6 +166,19 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   if (xhc_dev) {
     Log(kInfo, "xHC has been found: %d.%d.%d\n",
         xhc_dev->bus, xhc_dev->device, xhc_dev->function);
+  }
+
+  // Read BAR0 register.
+  const WithError<uint64_t> xhc_bar = pci::ReadBar(*xhc_dev, 0);
+  Log(kDebug, "ReadBar: %s\n", xhc_bar.error.Name());
+  const uint64_t xhc_mmio_base = xhc_bar.value & ~static_cast<uint64_t>(0xf);
+  Log(kDebug, "xHC mmio_base = %08lx\n", xhc_mmio_base);
+
+  // Initialize xHC.
+  usb::xhci::Controller xhc{xhc_mmio_base};
+
+  if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
+    SwitchEhci2Xhci(*xhc_dev);
   }
 
   while (1) __asm__("hlt");
