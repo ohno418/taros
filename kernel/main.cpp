@@ -180,6 +180,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
     SwitchEhci2Xhci(*xhc_dev);
   }
+  // TODO
 
   while (1) __asm__("hlt");
 }
