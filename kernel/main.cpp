@@ -176,11 +176,15 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
 
   // Initialize xHC.
   usb::xhci::Controller xhc{xhc_mmio_base};
-
   if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
     SwitchEhci2Xhci(*xhc_dev);
   }
-  // TODO
+  {
+    auto err = xhc.Initialize();
+    Log(kDebug, "xhc.Initialize: %s\n", err.Name());
+  }
+  Log(kInfo, "xHC starting\n");
+  xhc.Run();
 
   while (1) __asm__("hlt");
 }
