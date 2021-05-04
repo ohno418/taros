@@ -16,7 +16,9 @@ namespace pci {
 
     bool Match(uint8_t b) { return b == base; }
     bool Match(uint8_t b, uint8_t s) { return Match(b) && s == sub; }
-    bool Match(uint8_t b, uint8_t s, uint8_t i) { return Match(b, s) && i == interface; }
+    bool Match(uint8_t b, uint8_t s, uint8_t i) {
+      return Match(b, s) && i == interface;
+    }
   };
 
   /** @brief Store basic information for PCI devices. */

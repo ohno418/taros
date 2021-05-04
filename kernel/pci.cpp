@@ -148,7 +148,7 @@ namespace pci {
       return ScanBus(0);
     }
 
-    for (uint8_t function = 1; function < 8; ++function) {
+    for (uint8_t function = 0; function < 8; ++function) {
       if (ReadVendorId(0, 0, function) == 0xffffu) {
         // Invalid vendor ID.
         continue;
@@ -193,7 +193,7 @@ namespace pci {
     const auto bar_upper = ReadConfReg(device, addr + 4);
     return {
       bar | (static_cast<uint64_t>(bar_upper) << 32),
-      MAKE_ERROR(Error::kSuccess),
+      MAKE_ERROR(Error::kSuccess)
     };
   }
 }
