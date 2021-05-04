@@ -56,9 +56,9 @@ namespace {
 
 MouseCursor::MouseCursor(PixelWriter* writer, PixelColor erase_color,
                          Vector2D<int> initial_position)
-  : pixel_writer_{writer},
-    erase_color_{erase_color},
-    position_{initial_position} {
+    : pixel_writer_{writer},
+      erase_color_{erase_color},
+      position_{initial_position} {
   DrawMouseCursor(pixel_writer_, position_);
 }
 
