@@ -72,7 +72,7 @@ int printk(const char* format, ...) {
 void SwitchEhci2Xhci(const pci::Device& xhc_dev) {
   bool intel_ehc_exist = false;
   for (int i = 0; i < pci::num_device; ++i) {
-    if (pci::devices[i].class_code.Match(0x0cu, 0x03u, 0x02u) /* EHCI */ &&
+    if (pci::devices[i].class_code.Match(0x0cu, 0x03u, 0x20u) /* EHCI */ &&
         0x8086 == pci::ReadVendorId(pci::devices[i])) {
       intel_ehc_exist = true;
       break;
@@ -82,10 +82,10 @@ void SwitchEhci2Xhci(const pci::Device& xhc_dev) {
     return;
   }
 
-  uint32_t superspeed_ports = pci::ReadConfReg(xhc_dev, 0xdc);
-  pci::WriteConfReg(xhc_dev, 0xd8, superspeed_ports);
-  uint32_t ehci2xhci_ports = pci::ReadConfReg(xhc_dev, 0xd4);
-  pci::WriteConfReg(xhc_dev, 0xd0, ehci2xhci_ports);
+  uint32_t superspeed_ports = pci::ReadConfReg(xhc_dev, 0xdc); // USB3PRM
+  pci::WriteConfReg(xhc_dev, 0xd8, superspeed_ports); // USB3_PSSEN
+  uint32_t ehci2xhci_ports = pci::ReadConfReg(xhc_dev, 0xd4); // XUSB2PRM
+  pci::WriteConfReg(xhc_dev, 0xd0, ehci2xhci_ports); // XUSB2PR
   Log(kDebug, "SwitchEhci2Xhci: SS = %02, xHCI = %02x\n",
       superspeed_ports, ehci2xhci_ports);
 }
@@ -106,7 +106,6 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   // Draw desktop.
   const int kFrameWidth = frame_buffer_config.horizontal_resolution;
   const int kFrameHeight = frame_buffer_config.vertical_resolution;
-
   FillRectangle(*pixel_writer,
                 {0, 0},
                 {kFrameWidth, kFrameHeight - 50},
@@ -174,7 +173,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   const uint64_t xhc_mmio_base = xhc_bar.value & ~static_cast<uint64_t>(0xf);
   Log(kDebug, "xHC mmio_base = %08lx\n", xhc_mmio_base);
 
-  // Initialize xHC.
+  // Initialize and start xHC.
   usb::xhci::Controller xhc{xhc_mmio_base};
   if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
     SwitchEhci2Xhci(*xhc_dev);
