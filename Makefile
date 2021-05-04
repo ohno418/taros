@@ -18,7 +18,7 @@ run: disk.img
 
 bootx64.efi: FORCE
 	rm -f $@
-	cp ../edk2/Build/MikanLoaderX64/DEBUG_GCC5/X64/Loader.efi ./$@
+	cp ../edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi ./$@
 
 kernel/kernel.elf: FORCE
 	$(MAKE) -C ./kernel
