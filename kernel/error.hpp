@@ -8,16 +8,48 @@ class Error {
     kSuccess,
     kFull,
     kEmpty,
+    kNoEnoughMemory,
     kIndexOutOfRange,
+    kHostControllerNotHalted,
+    kInvalidSlotID,
+    kPortNotConnected,
+    kInvalidEndpointNumber,
+    kTransferRingNotSet,
+    kAlreadyAllocated,
+    kNotImplemented,
+    kInvalidDescriptor,
+    kBufferTooSmall,
+    kUnknownDevice,
+    kNoCorrespondingSetupStage,
+    kTransferFailed,
+    kInvalidPhase,
+    kUnknownXHCISpeedID,
+    kNoWaiter,
     kLastOfCode, // Put this last.
   };
 
  private:
-  static constexpr std::array<const char*, 4> code_names_ = {
+  static constexpr std::array<const char*, 20> code_names_ = {
     "kSuccess",
     "kFull",
     "kEmpty",
+    "kNoEnoughMemory",
     "kIndexOutOfRange",
+    "kHostControllerNotHalted",
+    "kInvalidSlotID",
+    "kPortNotConnected",
+    "kInvalidEndpointNumber",
+    "kTransferRingNotSet",
+    "kAlreadyAllocated",
+    "kNotImplemented",
+    "kInvalidDescriptor",
+    "kBufferTooSmall",
+    "kUnknownDevice",
+    "kNoCorrespondingSetupStage",
+    "kTransferFailed",
+    "kInvalidPhase",
+    "kUnknownXHCISpeedID",
+    "kNoWaiter",
   };
 
  public:
