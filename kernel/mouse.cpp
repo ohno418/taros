@@ -36,7 +36,7 @@ namespace {
         if (mouse_cursor_shape[dy][dx] == '@') {
           pixel_writer->Write(position.x + dx, position.y + dy, {0, 0, 0});
         } else if (mouse_cursor_shape[dy][dx] == '.') {
-          pixel_writer->Write(position.y + dx, position.y + dy, {255, 255, 255});
+          pixel_writer->Write(position.x + dx, position.y + dy, {255, 255, 255});
         }
       }
     }

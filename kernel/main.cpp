@@ -1,54 +1,25 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstdio>
-#include <stdarg.h>
 
 #include "console.hpp"
 #include "font.hpp"
 #include "frame_buffer_config.hpp"
 #include "graphics.hpp"
 #include "logger.hpp"
+#include "mouse.hpp"
 #include "pci.hpp"
+#include "usb/memory.hpp"
+#include "usb/device.hpp"
+#include "usb/classdriver/mouse.hpp"
 #include "usb/xhci/xhci.hpp"
+#include "usb/xhci/trb.hpp"
 
-void* operator new(size_t size, void* buf) {
-  return buf;
-}
-
-void operator delete(void* obj, size_t size) noexcept {
+void operator delete(void* obj) noexcept {
 }
 
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
-
-const int kMouseCursorWidth = 15;
-const int kMouseCursorHeight = 24;
-const char mouse_cursor_shape[kMouseCursorHeight][kMouseCursorWidth + 1] = {
-  "@              ",
-  "@@             ",
-  "@.@            ",
-  "@..@           ",
-  "@...@          ",
-  "@....@         ",
-  "@.....@        ",
-  "@......@       ",
-  "@.......@      ",
-  "@........@     ",
-  "@.........@    ",
-  "@..........@   ",
-  "@...........@  ",
-  "@............@ ",
-  "@......@@@@@@@@",
-  "@......@       ",
-  "@....@@.@      ",
-  "@...@ @.@      ",
-  "@..@   @.@     ",
-  "@.@    @.@     ",
-  "@@      @.@    ",
-  "@       @.@    ",
-  "         @.@   ",
-  "         @@@   ",
-};
 
 char pixel_writer_buf[sizeof(RGBResv8BitPerColorPixelWriter)];
 PixelWriter* pixel_writer;
@@ -67,6 +38,13 @@ int printk(const char* format, ...) {
 
   console->PutString(s);
   return result;
+}
+
+char mouse_cursor_buf[sizeof(MouseCursor)];
+MouseCursor* mouse_cursor;
+
+void MouseObserver(int8_t displacement_x, int8_t displacement_y) {
+  mouse_cursor->MoveRelative({displacement_x, displacement_y});
 }
 
 void SwitchEhci2Xhci(const pci::Device& xhc_dev) {
@@ -119,31 +97,26 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
                 {30, 30},
                 {160, 160, 160});
 
+  // Write a string on desktop.
   console = new(console_buf) Console{
     *pixel_writer, kDesktopFGColor, kDesktopBGColor
   };
   printk("Welcome to TarOS!\n");
-  SetLogLevel(kWarn);
 
-  // Write a cursor (but do nothing for now).
-  for (int dy = 0; dy < kMouseCursorHeight; ++dy) {
-    for (int dx = 0; dx < kMouseCursorWidth; ++dx) {
-      if (mouse_cursor_shape[dy][dx] == '@') {
-        pixel_writer->Write(200 + dx, 100 + dy, {0, 0, 0});
-      } else if (mouse_cursor_shape[dy][dx] == '.') {
-        pixel_writer->Write(200 + dx, 100 + dy, {255, 255, 255});
-      }
-    }
-  }
+  // Set global log level.
+  SetLogLevel(kDebug);
 
+  // Initialize mouse cursor.
+  mouse_cursor = new(mouse_cursor_buf) MouseCursor{
+    pixel_writer, kDesktopBGColor, {300, 200}
+  };
 
   // Scan devices from all buses and log them.
   auto err = pci::ScanAllBus();
   Log(kDebug, "ScanAllBus: %s\n", err.Name());
-
   for (int i = 0; i < pci::num_device; ++i) {
     const auto& dev = pci::devices[i];
-    auto vendor_id = pci::ReadVendorId(dev.bus, dev.device, dev.function);
+    auto vendor_id = pci::ReadVendorId(dev);
     auto class_code = pci::ReadClassCode(dev.bus, dev.device, dev.function);
     Log(kDebug, "%d.%d.%d: vend %04x, class %08x, head %02x\n",
         dev.bus, dev.device, dev.function,
@@ -185,5 +158,32 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   Log(kInfo, "xHC starting\n");
   xhc.Run();
 
+  // Scan all USB ports and configure connected ports.
+  usb::HIDMouseDriver::default_observer = MouseObserver;
+  for (int i = 1; i <= xhc.MaxPorts(); ++i) {
+    auto port = xhc.PortAt(i);
+    Log(kDebug, "Port %d: IsConnected=%d\n", i, port.IsConnected());
+
+    if (port.IsConnected()) {
+      if (auto err = ConfigurePort(xhc, port)) {
+        Log(kError, "failed to configure port: %s at %s:%d\n",
+            err.Name(), err.File(), err.Line());
+        continue;
+      }
+    }
+  }
+
+  // Polling mouse events.
+  while (1) {
+    if (auto err = ProcessEvent(xhc)) {
+      Log(kError, "Error while ProcessEvent: %s at %s:%d\n",
+          err.Name(), err.File(), err.Line());
+    }
+  }
+
+  while (1) __asm__("hlt");
+}
+
+extern "C" void __cxa_pure_virtual() {
   while (1) __asm__("hlt");
 }
