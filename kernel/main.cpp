@@ -15,9 +15,6 @@
 #include "usb/xhci/xhci.hpp"
 #include "usb/xhci/trb.hpp"
 
-void operator delete(void* obj) noexcept {
-}
-
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
 

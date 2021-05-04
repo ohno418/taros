@@ -9,6 +9,9 @@ void* operator new(unsigned long size) {
 void operator delete(void* buf, std::align_val_t val) {
 }
 
+void operator delete(void* obj) noexcept {
+}
+
 std::new_handler std::get_new_handler() noexcept {
   return nullptr;
 }
