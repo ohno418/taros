@@ -101,7 +101,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   printk("Welcome to TarOS!\n");
 
   // Set global log level.
-  SetLogLevel(kDebug);
+  SetLogLevel(kWarn);
 
   // Initialize mouse cursor.
   mouse_cursor = new(mouse_cursor_buf) MouseCursor{
