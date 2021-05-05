@@ -6,6 +6,7 @@
 #include "font.hpp"
 #include "frame_buffer_config.hpp"
 #include "graphics.hpp"
+#include "interrupt.hpp"
 #include "logger.hpp"
 #include "mouse.hpp"
 #include "pci.hpp"
