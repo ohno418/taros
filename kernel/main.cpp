@@ -65,6 +65,19 @@ void SwitchEhci2Xhci(const pci::Device& xhc_dev) {
       superspeed_ports, ehci2xhci_ports);
 }
 
+usb::xhci::Controller* xhc;
+
+__attribute__((interrupt))
+void IntHandlerXHCI(InterruptFrame* frame) {
+  while (xhc->PrimaryEventRing()->HasFront()) {
+    if (auto err = ProcessEvent(*xhc)) {
+      Log(kError, "Error while ProcessEvent: %s at %s: %d\n",
+          err.Name(), err.File(), err.Line());
+    }
+  }
+  NotifyEndOfInterrupt();
+}
+
 extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   // Initialize pixel_writer.
   switch (frame_buffer_config.pixel_format) {
@@ -167,14 +180,6 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
             err.Name(), err.File(), err.Line());
         continue;
       }
-    }
-  }
-
-  // Polling mouse events.
-  while (1) {
-    if (auto err = ProcessEvent(xhc)) {
-      Log(kError, "Error while ProcessEvent: %s at %s:%d\n",
-          err.Name(), err.File(), err.Line());
     }
   }
 
