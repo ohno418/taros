@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdio>
 
+#include "asmfunc.h"
 #include "console.hpp"
 #include "font.hpp"
 #include "frame_buffer_config.hpp"
@@ -150,6 +151,12 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
     Log(kInfo, "xHC has been found: %d.%d.%d\n",
         xhc_dev->bus, xhc_dev->device, xhc_dev->function);
   }
+
+  // Set IDT entry.
+  const uint16_t cs = GetCS();
+  SetIDTEntry(idt[InterruptVector::kXHCI], MakeIDTAttr(DescriptorType::kInterruptGate, 0),
+              reinterpret_cast<uint64_t>(IntHandlerXHCI), cs);
+  LoadIDT(sizeof(idt) - 1, reinterpret_cast<uintptr_t>(&idt[0]));
 
   // Read BAR0 register.
   const WithError<uint64_t> xhc_bar = pci::ReadBar(*xhc_dev, 0);
