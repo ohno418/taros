@@ -160,7 +160,7 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
 
   // Configure MSI interrupts.
   const uint8_t bsp_local_apic_id =
-    *reinterpret_cast<uint32_t*>(0xfee00020) >> 24;
+    *reinterpret_cast<const uint32_t*>(0xfee00020) >> 24;
   pci::ConfigureMSIFixedDestination(
       *xhc_dev, bsp_local_apic_id,
       pci::MSITriggerMode::kLevel, pci::MSIDeliveryMode::kFixed,
@@ -183,6 +183,9 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   }
   Log(kInfo, "xHC starting\n");
   xhc.Run();
+
+  ::xhc = &xhc;
+  __asm__("sti");
 
   // Scan all USB ports and configure connected ports.
   usb::HIDMouseDriver::default_observer = MouseObserver;
