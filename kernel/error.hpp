@@ -25,11 +25,12 @@ class Error {
     kInvalidPhase,
     kUnknownXHCISpeedID,
     kNoWaiter,
+    kNoPCIMSI,
     kLastOfCode, // Put this last.
   };
 
  private:
-  static constexpr std::array<const char*, 20> code_names_ = {
+  static constexpr std::array<const char*, 21> code_names_ = {
     "kSuccess",
     "kFull",
     "kEmpty",
@@ -50,6 +51,7 @@ class Error {
     "kInvalidPhase",
     "kUnknownXHCISpeedID",
     "kNoWaiter",
+    "kNoPCIMSI",
   };
 
  public:
