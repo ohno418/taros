@@ -2,21 +2,24 @@
 #include <cstddef>
 #include <cstdio>
 
-#include "asmfunc.h"
-#include "console.hpp"
-#include "font.hpp"
+#include <numeric>
+#include <vector>
+
 #include "frame_buffer_config.hpp"
 #include "graphics.hpp"
-#include "interrupt.hpp"
-#include "logger.hpp"
 #include "mouse.hpp"
+#include "font.hpp"
+#include "console.hpp"
 #include "pci.hpp"
-#include "queue.hpp"
+#include "logger.hpp"
 #include "usb/memory.hpp"
 #include "usb/device.hpp"
 #include "usb/classdriver/mouse.hpp"
 #include "usb/xhci/xhci.hpp"
 #include "usb/xhci/trb.hpp"
+#include "interrupt.hpp"
+#include "asmfunc.h"
+#include "queue.hpp"
 
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
