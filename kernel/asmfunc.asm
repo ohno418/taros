@@ -36,3 +36,15 @@ LoadIDT:
     mov rsp, rbp
     pop rbp
     ret
+
+extern kernel_main_stack
+extern KernelMainNewStack
+
+; Entrypoint of kernel.
+global KernelMain
+KernelMain:
+    mov rsp, kernel_main_stack + 1024 * 1024
+    call KernelMainNewStack
+.fin:
+    hlt
+    jmp .fin
