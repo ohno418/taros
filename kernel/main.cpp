@@ -21,6 +21,7 @@
 #include "interrupt.hpp"
 #include "asmfunc.h"
 #include "queue.hpp"
+#include "segment.hpp"
 
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
@@ -132,6 +133,13 @@ extern "C" void KernelMainNewStack(
 
   // Set global log level.
   SetLogLevel(kWarn);
+
+  // Set segments.
+  SetupSegments();
+  const uint16_t kernel_cs = 1 << 3;
+  const uint16_t kernel_ss = 2 << 3;
+  SetDSAll(0);
+  SetCSSS(kernel_cs, kernel_ss);
 
   // Print memory map.
   const std::array available_memory_types{
