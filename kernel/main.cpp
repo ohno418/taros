@@ -22,6 +22,7 @@
 #include "asmfunc.h"
 #include "queue.hpp"
 #include "segment.hpp"
+#include "paging.hpp"
 
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
@@ -140,6 +141,9 @@ extern "C" void KernelMainNewStack(
   const uint16_t kernel_ss = 2 << 3;
   SetDSAll(0);
   SetCSSS(kernel_cs, kernel_ss);
+
+  // Set page table.
+  SetupIdentityPageTable();
 
   // Print memory map.
   const std::array available_memory_types{
