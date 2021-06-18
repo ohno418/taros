@@ -162,8 +162,8 @@ extern "C" void KernelMainNewStack(
           (desc->physical_start - available_end) / kBytesPerFrame);
     }
 
-    const auto pysical_end =
-      desc->pysical_start + desc->number_of_pages * kUEFIPageSize;
+    const auto physical_end =
+      desc->physical_start + desc->number_of_pages * kUEFIPageSize;
     if (IsAvailable(static_cast<MemoryType>(desc->type))) {
       available_end = physical_end;
     } else {
