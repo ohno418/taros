@@ -23,6 +23,7 @@
 #include "queue.hpp"
 #include "segment.hpp"
 #include "paging.hpp"
+#include "memory_manager.hpp"
 
 const PixelColor kDesktopBGColor{0, 220, 100};
 const PixelColor kDesktopFGColor{0, 0, 0};
