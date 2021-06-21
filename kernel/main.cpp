@@ -149,8 +149,10 @@ extern "C" void KernelMainNewStack(
   // Set page table.
   SetupIdentityPageTable();
 
-  // Initialize memory manager, and assign available memory areas.
+  // Initialize memory manager.
   ::memory_manager = new(memory_manager_buf) BitmapMemoryManager;
+
+  // Assign available memory areas.
   const auto memory_map_base = reinterpret_cast<uintptr_t>(memory_map.buffer);
   uintptr_t available_end = 0;
   for (uintptr_t iter = memory_map_base;
@@ -174,6 +176,13 @@ extern "C" void KernelMainNewStack(
     }
   }
   memory_manager->SetMemoryRange(FrameID{1}, FrameID{available_end / kBytesPerFrame});
+
+  // Initialize heap memory.
+  if (auto err = InitializeHeap(*memory_manager)) {
+    Log(kError, "failed to allocate pages: %s at %s:%d\n",
+        err.Name(), err.File(), err.Line());
+    exit(1);
+  }
 
   // Initialize mouse cursor.
   mouse_cursor = new(mouse_cursor_buf) MouseCursor{

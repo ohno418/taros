@@ -4,6 +4,8 @@
 #include <limits>
 #include "error.hpp"
 
+#include "logger.hpp"
+
 namespace {
   constexpr unsigned long long operator""_KiB(unsigned long long kib) {
     return kib * 1024;
@@ -57,3 +59,5 @@ class BitmapMemoryManager {
   bool GetBit(FrameID frame) const;
   void SetBit(FrameID frame, bool allocated);
 };
+
+Error InitializeHeap(BitmapMemoryManager& memory_manager);
