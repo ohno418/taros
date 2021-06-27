@@ -26,9 +26,6 @@
 #include "memory_manager.hpp"
 #include "layer.hpp"
 
-const PixelColor kDesktopBGColor{0, 220, 100};
-const PixelColor kDesktopFGColor{0, 0, 0};
-
 char pixel_writer_buf[sizeof(RGBResv8BitPerColorPixelWriter)];
 PixelWriter* pixel_writer;
 
@@ -118,18 +115,11 @@ extern "C" void KernelMainNewStack(
   // Draw desktop.
   const int kFrameWidth = frame_buffer_config.horizontal_resolution;
   const int kFrameHeight = frame_buffer_config.vertical_resolution;
-  FillRectangle(*pixel_writer,
-                {0, 0},
-                {kFrameWidth, kFrameHeight - 50},
-                kDesktopBGColor);
-  FillRectangle(*pixel_writer,
-                {0, kFrameHeight - 50},
-                {kFrameWidth, 50},
-                {80, 80, 80});
-  DrawRectangle(*pixel_writer,
-                {10, kFrameHeight - 40},
-                {30, 30},
-                {160, 160, 160});
+  auto bgwindow = std::make_shared<Window>(kFrameWidth, kFrameHeight);
+  auto bgwriter = bgwindow->Writer();
+  DrawDesktop(*bgwriter);
+
+  console->SetWriter(bgwriter);
 
   // Write a string on desktop.
   console = new(console_buf) Console{
