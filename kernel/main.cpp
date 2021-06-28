@@ -24,6 +24,7 @@
 #include "segment.hpp"
 #include "paging.hpp"
 #include "memory_manager.hpp"
+#include "window.hpp"
 #include "layer.hpp"
 
 char pixel_writer_buf[sizeof(RGBResv8BitPerColorPixelWriter)];
@@ -112,19 +113,12 @@ extern "C" void KernelMainNewStack(
       break;
   }
 
-  // Draw desktop.
-  const int kFrameWidth = frame_buffer_config.horizontal_resolution;
-  const int kFrameHeight = frame_buffer_config.vertical_resolution;
-  auto bgwindow = std::make_shared<Window>(kFrameWidth, kFrameHeight);
-  auto bgwriter = bgwindow->Writer();
-  DrawDesktop(*bgwriter);
+  DrawDesktop(*pixel_writer);
 
-  console->SetWriter(bgwriter);
-
-  // Write a string on desktop.
   console = new(console_buf) Console{
-    *pixel_writer, kDesktopFGColor, kDesktopBGColor
+    kDesktopFGColor, kDesktopBGColor
   };
+  console->SetWriter(pixel_writer);
   printk("Welcome to TarOS!\n");
 
   // Set global log level.
@@ -210,9 +204,8 @@ extern "C" void KernelMainNewStack(
   }
 
   // Set IDT entry.
-  const uint16_t cs = GetCS();
   SetIDTEntry(idt[InterruptVector::kXHCI], MakeIDTAttr(DescriptorType::kInterruptGate, 0),
-              reinterpret_cast<uint64_t>(IntHandlerXHCI), cs);
+              reinterpret_cast<uint64_t>(IntHandlerXHCI), kernel_cs);
   LoadIDT(sizeof(idt) - 1, reinterpret_cast<uintptr_t>(&idt[0]));
 
   // Configure MSI interrupts.
@@ -257,6 +250,35 @@ extern "C" void KernelMainNewStack(
       }
     }
   }
+
+  // Draw desktop.
+  const int kFrameWidth = frame_buffer_config.horizontal_resolution;
+  const int kFrameHeight = frame_buffer_config.vertical_resolution;
+  auto bgwindow = std::make_shared<Window>(kFrameWidth, kFrameHeight);
+  auto bgwriter = bgwindow->Writer();
+  DrawDesktop(*bgwriter);
+  console->SetWriter(bgwriter);
+
+  // Draw mouse cursor.
+  auto mouse_window = std::make_shared<Window>(
+      kMouseCursorWidth, kMouseCursorHeight);
+  mouse_window->SetTransparentColor(kMouseTransparentColor);
+  DrawMouseCursor(mouse_window->Writer(), {0, 0});
+
+  // Initialize layer manager and draw.
+  layer_manager = new LayerManager;
+  layer_manager->SetWriter(pixel_writer);
+  auto bglayer_id = layer_manager->NewLayer()
+    .SetWindow(bgwindow)
+    .Move({0, 0})
+    .ID();
+  mouse_layer_id = layer_manager->NewLayer()
+    .SetWindow(mouse_window)
+    .Move({200, 200})
+    .ID();
+  layer_manager->UpDown(bglayer_id, 0);
+  layer_manager->UpDown(mouse_layer_id, 1);
+  layer_manager->Draw();
 
   // Event loop for interrupts.
   while (true) {

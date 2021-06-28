@@ -3,6 +3,7 @@
 #include <memory>
 #include <map>
 #include <vector>
+
 #include "graphics.hpp"
 #include "window.hpp"
 
@@ -27,23 +28,23 @@ class Layer {
 
 class LayerManager {
  public:
-   void SetWriter(PixelWriter* writer);
-   Layer& NewLayer();
+  void SetWriter(PixelWriter* writer);
+  Layer& NewLayer();
 
-   /** @brief Draw layers currently displayable. */
-   void Draw() const;
+  /** @brief Draw layers currently displayable. */
+  void Draw() const;
 
-   void Move(unsigned int id, Vector2D<int> new_position);
-   void MoveRelative(unsigned int id, Vector2D<int> pos_diff);
-   /** @brief Change layer height.
-    *
-    * Negative new_height makes the layer not display.
-    * Positive new_height makes the layer specified height.
-    * If new_height is larger than current layer height, the layer will be foremost.
-    */
-   void UpDown(unsigned int id, int new_height);
-   /** @brief Make a layer not display. */
-   void Hide(unsigned int id);
+  void Move(unsigned int id, Vector2D<int> new_position);
+  void MoveRelative(unsigned int id, Vector2D<int> pos_diff);
+  /** @brief Change layer height.
+   *
+   * Negative new_height makes the layer not display.
+   * Positive new_height makes the layer specified height.
+   * If new_height is larger than current layer height, the layer will be foremost.
+   */
+  void UpDown(unsigned int id, int new_height);
+  /** @brief Make a layer not display. */
+  void Hide(unsigned int id);
 
  private:
   PixelWriter* writer_{nullptr};
