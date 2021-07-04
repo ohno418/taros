@@ -6,16 +6,18 @@ OBJS = main.o graphics.o mouse.o font.o hankaku.o newlib_support.o console.o \
 	   usb/classdriver/base.o usb/classdriver/hid.o usb/classdriver/keyboard.o \
 	   usb/classdriver/mouse.o
 CPPFLAGS = -I/usr/include/c++/v1 -I/usr/include -I. -nostdlibinc
-CFLAGS   = -O2 -Wall -g -ffreestanding -mno-red-zone
+CFLAGS   = -O2 -Wall -g -ffreestanding -mno-red-zone -nostdlib
 CXXFLAGS = -O2 -Wall -g -ffreestanding -mno-red-zone \
-		   -fno-exceptions -fno-rtti -std=c++17
+           -fno-exceptions -fno-rtti -std=c++17 -nostdlib
 LDFLAGS  = -L/home/yutarofire/dev/mikanosdev/taros/build_newlib/libc \
-		   --entry KernelMain -z norelro -z separate-code \
-		   --image-base 0x100000 --static
+           -L/usr/lib \
+           -L/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0 \
+           --entry KernelMain -z norelro -z separate-code \
+           --image-base 0x100000 --static
 
 
 kernel.elf: $(OBJS) Makefile
-	ld.lld $(LDFLAGS) -o $@ $(OBJS) -lc
+	ld.lld $(LDFLAGS) -o $@ $(OBJS) -lc -lc++ -lc++abi -lgcc -lgcc_eh
 
 %.o: %.cpp Makefile
 	clang++ $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
