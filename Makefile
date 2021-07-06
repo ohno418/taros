@@ -14,6 +14,7 @@ run: disk.img
 		-monitor stdio \
 		-drive if=pflash,file=../mikanos-build/devenv/OVMF_CODE.fd \
 		-drive if=pflash,file=../mikanos-build/devenv/OVMF_VARS.fd \
+		-device nec-usb-xhci,id=xhci -device usb-mouse \
 		-hda $<
 
 bootx64.efi: FORCE
