@@ -11,11 +11,13 @@ disk.img: bootx64.efi kernel/kernel.elf
 .PHONY: run
 run: disk.img
 	qemu-system-x86_64 \
-		-monitor stdio \
-		-drive if=pflash,file=../mikanos-build/devenv/OVMF_CODE.fd \
-		-drive if=pflash,file=../mikanos-build/devenv/OVMF_VARS.fd \
-		-device nec-usb-xhci,id=xhci -device usb-mouse \
-		-hda $<
+		-m 1G \
+		-drive if=pflash,format=raw,readonly,file=../mikanos-build/devenv/OVMF_CODE.fd \
+		-drive if=pflash,format=raw,file=../mikanos-build/devenv/OVMF_VARS.fd \
+		-drive if=ide,index=0,media=disk,format=raw,file=$< \
+		-device nec-usb-xhci,id=xhci \
+		-device usb-mouse -device usb-kbd \
+		-monitor stdio
 
 bootx64.efi: FORCE
 	rm -f $@
