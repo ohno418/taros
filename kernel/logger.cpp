@@ -1,7 +1,8 @@
 #include "logger.hpp"
 
+#include <cstddef>
 #include <cstdio>
-#include <stdarg.h>
+
 #include "console.hpp"
 
 namespace {

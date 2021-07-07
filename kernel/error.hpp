@@ -1,7 +1,7 @@
 #pragma once
 
-#include <array>
 #include <cstdio>
+#include <array>
 
 class Error {
  public:
@@ -31,7 +31,7 @@ class Error {
   };
 
  private:
-  static constexpr std::array<const char*, 21> code_names_ = {
+  static constexpr std::array code_names_{
     "kSuccess",
     "kFull",
     "kEmpty",
@@ -54,6 +54,7 @@ class Error {
     "kNoWaiter",
     "kNoPCIMSI",
   };
+  static_assert(Error::Code::kLastOfCode == code_names_.size());
 
  public:
   Error(Code code, const char* file, int line) : code_{code}, line_{line}, file_{file} {}

@@ -45,6 +45,10 @@ void DrawDesktop(PixelWriter& writer) {
   FillRectangle(writer,
                 {0, height - 50},
                 {width, 50},
+                {1, 8, 17});
+  FillRectangle(writer,
+                {0, height - 50},
+                {width / 5, 50},
                 {80, 80, 80});
   DrawRectangle(writer,
                 {10, height - 40},

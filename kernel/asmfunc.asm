@@ -15,13 +15,13 @@ IoOut32:
 
 global IoIn32  ; uint32_t IoIn32(uint16_t addr);
 IoIn32:
-    mov dx, di  ; dx = addr
+    mov dx, di    ; dx = addr
     in eax, dx
     ret
 
 global GetCS  ; uint16_t GetCS(void);
 GetCS:
-    xor eax, eax  ; also clears uppper 32 bits of rax
+    xor eax, eax  ; also clears upper 32 bits of rax
     mov ax, cs
     ret
 
@@ -79,7 +79,6 @@ SetCR3:
 extern kernel_main_stack
 extern KernelMainNewStack
 
-; Entrypoint of kernel.
 global KernelMain
 KernelMain:
     mov rsp, kernel_main_stack + 1024 * 1024

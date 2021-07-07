@@ -2,9 +2,8 @@
 
 #include <array>
 #include <limits>
-#include "error.hpp"
 
-#include "logger.hpp"
+#include "error.hpp"
 
 namespace {
   constexpr unsigned long long operator""_KiB(unsigned long long kib) {

@@ -5,7 +5,7 @@ namespace {
   std::array<SegmentDescriptor, 3> gdt;
 }
 
-void SetCodeSegment(SegmentDescriptor &desc,
+void SetCodeSegment(SegmentDescriptor& desc,
                     DescriptorType type,
                     unsigned int descriptor_privilege_level,
                     uint32_t base,
@@ -29,7 +29,7 @@ void SetCodeSegment(SegmentDescriptor &desc,
   desc.bits.granularity = 1;
 }
 
-void SetDataSegment(SegmentDescriptor &desc,
+void SetDataSegment(SegmentDescriptor& desc,
                     DescriptorType type,
                     unsigned int descriptor_privilege_level,
                     uint32_t base,
