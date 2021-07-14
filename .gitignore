@@ -3,5 +3,6 @@
 *.o
 *.elf
 *.bin
+*.tmp
 
 /build_newlib
