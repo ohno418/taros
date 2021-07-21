@@ -115,7 +115,7 @@ void DrawWindow(PixelWriter& writer, const char* title) {
   fill_rect({win_w - 2, 1}, {1, win_h - 2},         0x848484);
   fill_rect({win_w - 1, 0}, {1, win_h},             0x000000);
   fill_rect({2, 2},         {win_w - 4, win_h - 4}, 0xc6c6c6);
-  fill_rect({3, 3},         {win_w - 6, 18},        0x000084);
+  fill_rect({3, 3},         {win_w - 6, 18},        0xff33ff);
   fill_rect({1, win_h - 2}, {win_w - 2, 1},         0x848484);
   fill_rect({0, win_h - 1}, {win_w, 1},             0x000000);
 
