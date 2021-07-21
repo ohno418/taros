@@ -48,7 +48,7 @@ constexpr InterruptDescriptorAttribute MakeIDTAttr(
   attr.bits.descriptor_privilege_level = descriptor_privilege_level;
   attr.bits.present = present;
   return attr;
-};
+}
 
 void SetIDTEntry(InterruptDescriptor& desc,
                  InterruptDescriptorAttribute attr,

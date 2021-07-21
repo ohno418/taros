@@ -276,7 +276,7 @@ extern "C" void KernelMainNewStack(
   // Put main window.
   auto main_window = std::make_shared<Window>(
       160, 68, frame_buffer_config.pixel_format);
-  DrawWindow(*main_window->Writer(), "Helo Window");
+  DrawWindow(*main_window->Writer(), "Hello Window");
   WriteString(*main_window->Writer(), {24, 28}, "Welcome to", {0, 0, 0});
   WriteString(*main_window->Writer(), {24, 44}, " TarOS world!", {0, 0, 0});
 
