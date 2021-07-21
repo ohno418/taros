@@ -58,7 +58,7 @@ void MouseObserver(int8_t displacement_x, int8_t displacement_y) {
   newpos = ElementMin(newpos, screen_size + Vector2D<int>{-1, -1});
   mouse_position = ElementMax(newpos, {0, 0});
 
-  layer_manager->MoveRelative(mouse_layer_id, {displacement_x, displacement_y});
+  layer_manager->Move(mouse_layer_id, mouse_position);
   layer_manager->Draw();
 }
 
