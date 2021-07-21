@@ -5,7 +5,7 @@ x() {
   echo "file: $file"
   eval "diff ./kernel/$file ../mikanos/kernel/$file" \
     | sed 's/^[0-9].*//' | sed 's/^> *\/\/.*//' | sed 's/^< *\/\/.*//' \
-    | sed 's/> *//' | sed 's/< *//' | sed 's/^\/\*.*//' | sed 's/^\*.*//' \
+    | sed 's/^> *//' | sed 's/^< *//' | sed 's/^\/\*.*//' | sed 's/^\*.*//' \
     | sed 's/---//' | sed '/^$/d' | sed 's/^/\t/'
 }
 
