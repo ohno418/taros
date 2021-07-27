@@ -23,6 +23,7 @@
 #include "memory_manager.hpp"
 #include "window.hpp"
 #include "layer.hpp"
+#include "message.hpp"
 
 int printk(const char* format, ...) {
   va_list ap;
@@ -37,19 +38,7 @@ int printk(const char* format, ...) {
   return result;
 }
 
-struct Message {
-  enum Type {
-    kInterruptXHCI,
-  } type;
-};
-
 std::deque<Message>* main_queue;
-
-__attribute__((interrupt))
-void IntHandlerXHCI(InterruptFrame* frame) {
-  main_queue->push_back(Message{Message::kInterruptXHCI});
-  NotifyEndOfInterrupt();
-}
 
 alignas(16) uint8_t kernel_main_stack[1024 * 1024];
 
@@ -72,10 +61,7 @@ extern "C" void KernelMainNewStack(
 
   InitializePCI();
 
-  // Set IDT entry.
-  SetIDTEntry(idt[InterruptVector::kXHCI], MakeIDTAttr(DescriptorType::kInterruptGate, 0),
-              reinterpret_cast<uint64_t>(IntHandlerXHCI), kKernelCS);
-  LoadIDT(sizeof(idt) - 1, reinterpret_cast<uintptr_t>(&idt[0]));
+  InitializeInterrupt(main_queue);
 
   auto xhc = usb::xhci::MakeRunController();
 
