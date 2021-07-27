@@ -68,6 +68,7 @@ const unsigned short * * __ctype_b_loc (void) {
   return 0;
 }
 
+struct dl_phdr_info;
 int dl_iterate_phdr(
           int (*callback) (struct dl_phdr_info *info,
                            size_t size, void *data),
@@ -85,6 +86,7 @@ int __sched_get_priority_min (int __algorithm) {
   return 0;
 }
 
+struct sched_param;
 int __sched_setscheduler (__pid_t __pid, int __policy, const struct sched_param *__param) {
   return 0;
 }
