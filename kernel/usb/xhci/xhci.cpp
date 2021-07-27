@@ -527,7 +527,9 @@ namespace usb::xhci {
     return err;
   }
 
-  std::shared_ptr<Controller> MakeRunController() {
+  Controller* controller;
+
+  void Initialize() {
     // Find xHC.
     pci::Device* xhc_dev = nullptr;
     for (int i = 0; i < pci::num_device; ++i) {
@@ -563,8 +565,8 @@ namespace usb::xhci {
     const uint64_t xhc_mmio_base = xhc_bar.value & ~static_cast<uint64_t>(0xf);
     Log(kDebug, "xHC mmio_base = %08lx\n", xhc_mmio_base);
 
-    auto xhc_ptr = std::make_shared<Controller>(xhc_mmio_base);
-    Controller& xhc = *xhc_ptr;
+    usb::xhci::controller = new Controller{xhc_mmio_base};
+    Controller& xhc = *usb::xhci::controller;
 
     // Initialize and start xHC.
     if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
@@ -591,13 +593,11 @@ namespace usb::xhci {
         }
       }
     }
-
-    return xhc_ptr;
   }
 
-  void ProcessEvents(const std::shared_ptr<Controller>& xhc) {
-    while (xhc->PrimaryEventRing()->HasFront()) {
-      if (auto err = ProcessEvent(*xhc)) {
+  void ProcessEvents() {
+    while (controller->PrimaryEventRing()->HasFront()) {
+      if (auto err = ProcessEvent(*controller)) {
         Log(kError, "Error while ProcessEvent: %s at %s:%d\n",
             err.Name(), err.File(), err.Line());
       }

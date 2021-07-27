@@ -56,16 +56,12 @@ extern "C" void KernelMainNewStack(
   InitializeSegmentation();
   InitializePaging();
   InitializeMemoryManager(memory_map);
-
   ::main_queue = new std::deque<Message>(32);
-
-  InitializePCI();
-
   InitializeInterrupt(main_queue);
 
-  auto xhc = usb::xhci::MakeRunController();
+  InitializePCI();
+  usb::xhci::Initialize();
 
-  // Draw desktop.
   const auto screen_size = ScreenSize();
 
   auto bgwindow = std::make_shared<Window>(
@@ -137,7 +133,7 @@ extern "C" void KernelMainNewStack(
 
     switch (msg.type) {
     case Message::kInterruptXHCI:
-      usb::xhci::ProcessEvents(xhc);
+      usb::xhci::ProcessEvents();
       break;
     default:
       Log(kError, "Unknown message type: %d\n", msg.type);
