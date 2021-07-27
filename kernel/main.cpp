@@ -4,6 +4,7 @@
 
 #include <numeric>
 #include <vector>
+#include <deque>
 
 #include "frame_buffer_config.hpp"
 #include "memory_map.hpp"
@@ -42,11 +43,11 @@ struct Message {
   } type;
 };
 
-ArrayQueue<Message>* main_queue;
+std::deque<Message>* main_queue;
 
 __attribute__((interrupt))
 void IntHandlerXHCI(InterruptFrame* frame) {
-  main_queue->Push(Message{Message::kInterruptXHCI});
+  main_queue->push_back(Message{Message::kInterruptXHCI});
   NotifyEndOfInterrupt();
 }
 
@@ -67,10 +68,7 @@ extern "C" void KernelMainNewStack(
   InitializePaging();
   InitializeMemoryManager(memory_map);
 
-  // Initialize interrupt queue.
-  std::array<Message, 32> main_queue_data;
-  ArrayQueue<Message> main_queue{main_queue_data};
-  ::main_queue = &main_queue;
+  ::main_queue = new std::deque<Message>(32);
 
   // Scan devices from all buses and log them.
   auto err = pci::ScanAllBus();
@@ -152,13 +150,13 @@ extern "C" void KernelMainNewStack(
     layer_manager->Draw(main_window_layer_id);
 
     __asm__("cli");
-    if (main_queue.Count() == 0) {
+    if (main_queue->size() == 0) {
       __asm__("sti");
       continue;
     }
 
-    Message msg = main_queue.Front();
-    main_queue.Pop();
+    Message msg = main_queue->front();
+    main_queue->pop_front();
     __asm__("sti");
 
     switch (msg.type) {
