@@ -62,20 +62,10 @@ extern "C" void KernelMainNewStack(
 
   printk("Welcome to TarOS!\n");
 
-  // Set global log level.
   SetLogLevel(kWarn);
 
-  // Set segments.
-  SetupSegments();
-  const uint16_t kernel_cs = 1 << 3;
-  const uint16_t kernel_ss = 2 << 3;
-  SetDSAll(0);
-  SetCSSS(kernel_cs, kernel_ss);
-
-  // Set page table.
-  SetupIdentityPageTable();
-
-  // Initialize memory manager.
+  InitializeSegmentation();
+  InitializePaging();
   InitializeMemoryManager(memory_map);
 
   // Initialize interrupt queue.
@@ -97,7 +87,7 @@ extern "C" void KernelMainNewStack(
 
   // Set IDT entry.
   SetIDTEntry(idt[InterruptVector::kXHCI], MakeIDTAttr(DescriptorType::kInterruptGate, 0),
-              reinterpret_cast<uint64_t>(IntHandlerXHCI), kernel_cs);
+              reinterpret_cast<uint64_t>(IntHandlerXHCI), kKernelCS);
   LoadIDT(sizeof(idt) - 1, reinterpret_cast<uintptr_t>(&idt[0]));
 
   auto xhc = usb::xhci::MakeRunController();
