@@ -61,7 +61,6 @@ extern "C" void KernelMainNewStack(
   InitializeConsole();
 
   printk("Welcome to TarOS!\n");
-
   SetLogLevel(kWarn);
 
   InitializeSegmentation();
