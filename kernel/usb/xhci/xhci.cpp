@@ -1,5 +1,6 @@
 #include "usb/xhci/xhci.hpp"
 
+#include <cstring>
 #include "logger.hpp"
 #include "pci.hpp"
 #include "interrupt.hpp"
@@ -68,7 +69,7 @@ namespace {
     }
 
     int msb_index;
-    asm("bsr %1, %0"
+    __asm__("bsr %1, %0"
         : "=r"(msb_index) : "m"(value));
     return msb_index;
   }
@@ -572,9 +573,9 @@ namespace usb::xhci {
     if (0x8086 == pci::ReadVendorId(*xhc_dev)) {
       SwitchEhci2Xhci(*xhc_dev);
     }
-    {
-      auto err = xhc.Initialize();
-      Log(kDebug, "xhc.Initialize: %s\n", err.Name());
+    if (auto err = xhc.Initialize()) {
+      Log(kError, "xhc initialize failed: %s\n", err.Name());
+      exit(1);
     }
 
     Log(kInfo, "xHC starting\n");
