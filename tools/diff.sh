@@ -1,6 +1,6 @@
 #!/bin/bash
 
-x() {
+diffx () {
   file=$1
   echo "file: $file"
   eval "diff ./kernel/$file ../mikanos/kernel/$file" \
@@ -9,42 +9,43 @@ x() {
     | sed 's/---//' | sed '/^$/d' | sed 's/^/\t/'
 }
 
-x asmfunc.h
-x console.cpp
-x console.hpp
-x elf.hpp
-x error.hpp
-x font.cpp
-x font.hpp
-x frame_buffer_config.hpp
-x frame_buffer.cpp
-x frame_buffer.hpp
-x graphics.cpp
-x graphics.hpp
-x interrupt.cpp
-x interrupt.hpp
-x layer.cpp
-x layer.hpp
-x libcxx_support.cpp
-x logger.cpp
-x logger.hpp
-x main.cpp
-x memory_manager.cpp
-x memory_manager.hpp
-x memory_map.hpp
-x mouse.cpp
-x mouse.hpp
-x newlib_support.c
-x paging.cpp
-x paging.hpp
-x pci.cpp
-x pci.hpp
-x queue.hpp
-x register.hpp
-x segment.cpp
-x segment.hpp
-x timer.cpp
-x timer.hpp
-x window.cpp
-x window.hpp
-x x86_descriptor.hpp
+diffx asmfunc.asm
+diffx asmfunc.h
+diffx console.cpp
+diffx console.hpp
+diffx elf.hpp
+diffx error.hpp
+diffx font.cpp
+diffx font.hpp
+diffx frame_buffer_config.hpp
+diffx frame_buffer.cpp
+diffx frame_buffer.hpp
+diffx graphics.cpp
+diffx graphics.hpp
+diffx interrupt.cpp
+diffx interrupt.hpp
+diffx layer.cpp
+diffx layer.hpp
+diffx libcxx_support.cpp
+diffx logger.cpp
+diffx logger.hpp
+diffx main.cpp
+diffx memory_manager.cpp
+diffx memory_manager.hpp
+diffx memory_map.hpp
+diffx message.hpp
+diffx mouse.cpp
+diffx mouse.hpp
+diffx newlib_support.c
+diffx paging.cpp
+diffx paging.hpp
+diffx pci.cpp
+diffx pci.hpp
+diffx register.hpp
+diffx segment.cpp
+diffx segment.hpp
+diffx timer.cpp
+diffx timer.hpp
+diffx window.cpp
+diffx window.hpp
+diffx x86_descriptor.hpp
