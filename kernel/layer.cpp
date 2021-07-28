@@ -172,7 +172,7 @@ namespace {
 
 LayerManager* layer_manager;
 
-void Initializelayer() {
+void InitializeLayer() {
   const auto screen_size = ScreenSize();
 
   auto bgwindow = std::make_shared<Window>(

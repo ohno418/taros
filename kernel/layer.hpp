@@ -65,4 +65,4 @@ class LayerManager {
 
 extern LayerManager* layer_manager;
 
-void Initializelayer();
+void InitializeLayer();

@@ -5,6 +5,7 @@
 #include <numeric>
 #include <vector>
 #include <deque>
+#include <limits>
 
 #include "frame_buffer_config.hpp"
 #include "memory_map.hpp"
@@ -40,17 +41,17 @@ int printk(const char* format, ...) {
 std::shared_ptr<Window> main_window;
 unsigned int main_window_layer_id;
 void InitializeMainWindow() {
-  auto main_window = std::make_shared<Window>(
+  main_window = std::make_shared<Window>(
       160, 52, screen_config.pixel_format);
   DrawWindow(*main_window->Writer(), "Hello Window");
 
-  auto main_window_layer_id = layer_manager->NewLayer()
+  main_window_layer_id = layer_manager->NewLayer()
     .SetWindow(main_window)
     .SetDraggable(true)
     .Move({300, 100})
     .ID();
 
-  layer_manager->UpDown(main_window_layer_id, 2);
+  layer_manager->UpDown(main_window_layer_id, std::numeric_limits<int>::max());
 }
 
 std::deque<Message>* main_queue;
@@ -77,7 +78,7 @@ extern "C" void KernelMainNewStack(
   InitializePCI();
   usb::xhci::Initialize();
 
-  Initializelayer();
+  InitializeLayer();
   InitializeMainWindow();
   InitializeMouse();
   layer_manager->Draw({{0, 0}, ScreenSize()});
