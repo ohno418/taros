@@ -332,7 +332,7 @@ namespace {
     Log(kDebug, "SwitchEhci2Xhci: SS = %02, xHCI = %02x\n",
         superspeed_ports, ehci2xhci_ports);
   }
-}
+} // namespace
 
 namespace usb::xhci {
 
