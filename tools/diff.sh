@@ -9,6 +9,8 @@ diffx () {
     | sed 's/---//' | sed '/^$/d' | sed 's/^/\t/'
 }
 
+diffx acpi.cpp
+diffx acpi.hpp
 diffx asmfunc.asm
 diffx asmfunc.h
 diffx console.cpp
