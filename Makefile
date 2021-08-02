@@ -19,6 +19,13 @@ run: disk.img
 		-device usb-mouse -device usb-kbd \
 		-monitor stdio
 
+.PHONY: cp-usb
+cp-usb: bootx64.efi kernel/kernel.elf
+	sudo mount /dev/sda1 /mnt/usbmem
+	sudo cp ./bootx64.efi /mnt/usbmem/EFI/BOOT/BOOTX64.EFI
+	sudo cp ./kernel/kernel.elf /mnt/usbmem/kernel.elf
+	sudo umount /mnt/usbmem
+
 bootx64.efi: FORCE
 	rm -f $@
 	cp ../edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi ./$@
