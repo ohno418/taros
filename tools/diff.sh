@@ -32,6 +32,8 @@ diffx kernel/graphics.cpp
 diffx kernel/graphics.hpp
 diffx kernel/interrupt.cpp
 diffx kernel/interrupt.hpp
+diffx kernel/keyboard.hpp
+diffx kernel/keyboard.cpp
 diffx kernel/layer.cpp
 diffx kernel/layer.hpp
 # diffx kernel/libcxx_support.cpp
