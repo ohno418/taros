@@ -28,7 +28,7 @@ class Error {
     kNoWaiter,
     kNoPCIMSI,
     kUnknownPixelFormat,
-    kLastOfCode, // Put this last.
+    kLastOfCode,  // Put this last.
   };
 
  private:
