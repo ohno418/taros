@@ -54,6 +54,8 @@ diffx kernel/pci.hpp
 diffx kernel/register.hpp
 diffx kernel/segment.cpp
 diffx kernel/segment.hpp
+diffx kernel/task.cpp
+diffx kernel/task.hpp
 diffx kernel/timer.cpp
 diffx kernel/timer.hpp
 diffx kernel/window.cpp
