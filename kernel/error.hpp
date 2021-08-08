@@ -28,6 +28,7 @@ class Error {
     kNoWaiter,
     kNoPCIMSI,
     kUnknownPixelFormat,
+    kNoSuchTask,
     kLastOfCode,  // Put this last.
   };
 
@@ -55,6 +56,7 @@ class Error {
     "kNoWaiter",
     "kNoPCIMSI",
     "kUnknownPixelFormat",
+    "kNoSuchTask",
   };
   static_assert(Error::Code::kLastOfCode == code_names_.size());
 
