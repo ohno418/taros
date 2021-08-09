@@ -12,8 +12,8 @@ disk.img: bootx64.efi kernel/kernel.elf
 run: disk.img
 	qemu-system-x86_64 \
 		-m 1G \
-		-drive if=pflash,format=raw,readonly,file=../mikanos-build/devenv/OVMF_CODE.fd \
-		-drive if=pflash,format=raw,file=../mikanos-build/devenv/OVMF_VARS.fd \
+		-drive if=pflash,format=raw,readonly,file=./tools/OVMF_CODE.fd \
+		-drive if=pflash,format=raw,file=./tools/OVMF_VARS.fd \
 		-drive if=ide,index=0,media=disk,format=raw,file=$< \
 		-device nec-usb-xhci,id=xhci \
 		-device usb-mouse -device usb-kbd \
