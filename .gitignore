@@ -1,5 +1,4 @@
 *.img
-*.efi
 *.o
 *.elf
 *.bin
