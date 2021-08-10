@@ -26,7 +26,7 @@ cp-usb: bootx64.efi kernel/kernel.elf
 	sudo cp ./kernel/kernel.elf /mnt/usbmem/kernel.elf
 	sudo umount /mnt/usbmem
 
-bootx64.efi: FORCE
+bootx64.efi: MikanLoaderPkg/Main.c
 	rm -f $@
 	cp ../edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi ./$@
 

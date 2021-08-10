@@ -10,7 +10,7 @@ CPPFLAGS = -I/usr/include/c++/v1 -I/usr/include -I. -nostdlibinc
 CFLAGS   = -O2 -Wall -g -ffreestanding -mno-red-zone -nostdlib
 CXXFLAGS = -O2 -Wall -g -ffreestanding -mno-red-zone \
            -fno-exceptions -fno-rtti -std=c++17 -nostdlib
-LDFLAGS  = -L/home/yutarofire/dev/osdev/taros/build_newlib/libc \
+LDFLAGS  = -L/home/ohno/dev/osdev/taros/build_newlib/libc \
            -L/usr/lib \
            -L/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0 \
            --entry KernelMain -z norelro -z separate-code \
