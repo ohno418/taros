@@ -104,3 +104,8 @@ int __sched_getscheduler (__pid_t __pid) {
 void __tunable_get_val (tunable_id_t a, void * b, tunable_callback_t c) {}
 void _dl_x86_cpu_features() {}
 void __libc_longjmp() {}
+
+long double strtold;
+double nan;
+float nanf;
+long double strtold_l;

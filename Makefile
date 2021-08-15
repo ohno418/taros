@@ -38,4 +38,4 @@ FORCE:
 .PHONY: clean
 clean:
 	$(MAKE) -C ./kernel clean
-	rm -rf disk.img bootx64.efi mnt
+	rm -rf disk.img mnt
