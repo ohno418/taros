@@ -50,6 +50,8 @@ diffx segment.cpp
 diffx segment.hpp
 diffx task.cpp
 diffx task.hpp
+diffx terminal.cpp
+diffx terminal.hpp
 diffx timer.cpp
 diffx timer.hpp
 diffx window.cpp
