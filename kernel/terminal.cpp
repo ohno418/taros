@@ -104,7 +104,11 @@ void Terminal::ExecuteLine() {
       Print(first_arg);
     }
     Print("\n");
-  } else {
+  } else if (strcmp(command, "clear") == 0) {
+    FillRectangle(*window_->InnerWriter(),
+                  {4, 4}, {8*kColumns, 16*kRows}, {0, 0, 0});
+    cursor_.y = 0;
+  } else if (command[0] != 0) {
     Print("no such command: ");
     Print(command);
     Print("\n");
