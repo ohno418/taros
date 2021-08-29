@@ -380,7 +380,7 @@ EFI_STATUS EFIAPI UefiMain(
     Halt();
   }
 
-  /* Read the volume image named "fat_disk" */
+  /* Read the volume image named "fat_disk", or bootloader image. */
   VOID* volume_image;
 
   EFI_FILE_PROTOCOL* volume_file;
