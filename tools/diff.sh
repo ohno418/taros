@@ -17,6 +17,8 @@ diffx console.cpp
 diffx console.hpp
 diffx elf.hpp
 diffx error.hpp
+diffx fat.cpp
+diffx fat.hpp
 diffx font.cpp
 diffx font.hpp
 diffx frame_buffer_config.hpp
